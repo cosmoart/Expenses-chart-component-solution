@@ -34,30 +34,49 @@ const Graphic = styled.ul`
 	align-items: flex-end;
 	height: 8rem;
 	li{
+		transition: height .2s ease-in-out;
 		border-radius: 5px;
 		width: 30px;
-		height: 100%;
+		height: 80%;
 		background: var(--Softred);
 		&::marker{
 			font-size: 0;
+		}
+		&::after{
+			content: attr(data-day);
 		}
 	}
 	`
 
 function App() {
+	const [data, setData] = useState("");
 
-	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' });
+	const [max, setMax] = useState({ day: "mon", amount: 0 });
+
+	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' }).toLocaleLowerCase();
 
 	useEffect(() => {
-		fetch("data.json").then(res => res.json()).then(data => {
-			let total = 0;
-			for (let i of data) {
-				total += i.amount;
-			}
-			console.log(total);
-			console.log(total * 2);
-		});
+		const getData = async () => {
+			await fetch("data.json").then(res => res.json()).then(data => {
+				setData(data);
+				let maxNumber = data.reduce((acc, cur) => acc > cur.amount ? acc : cur.amount, 0);
+				for (const i of data) i.amount === maxNumber && setMax(i);
+			});
+			console.log(max);
+		}
+		getData();
 	}, []);
+
+	useEffect(() => {
+		document.querySelectorAll("ul li").forEach(i => {
+			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)")
+			i.getAttribute("data-day") === max.day && (i.style.height = "100%");
+
+			// i.style.height = `${}%`;
+		});
+		console.log(max);
+	}, [max]);
+
 
 	return (
 		<Card>
@@ -69,13 +88,13 @@ function App() {
 				<h1>Spending - Last 7 days</h1>
 
 				<Graphic>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
+					<li data-day="mon"></li>
+					<li data-day="tue"></li>
+					<li data-day="wed"></li>
+					<li data-day="thu"></li>
+					<li data-day="fri"></li>
+					<li data-day="sat"></li>
+					<li data-day="sun"></li>
 				</Graphic>
 
 				<hr />
