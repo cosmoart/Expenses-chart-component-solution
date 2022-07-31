@@ -43,14 +43,40 @@ const Graphic = styled.ul`
 		&::after{
 			content: attr(data-day);
 		}
+		&::before{
+			content: attr(data-amount);
+		}
+	}
+	`
+const EditForm = styled.form`
+	display: flex;
+    flex-direction: column;
+	position: absolute;
+    bottom: 0;
+    right: 0;
+	background: red;
+    padding: 1rem;
+    margin: 2rem;
+    border-radius: 10px;
+	`
+const EditFormItem = styled.label`
+	display: flex;
+    justify-content: space-between;
+	gap: 1rem;
+	span::first-letter{
+		text-transform: uppercase;
+	}
+	input{
+		width: 5rem;
+		text-align:right;
 	}
 	`
 
 function App() {
+	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' }).toLocaleLowerCase();
 	const [data, setData] = useState("");
 	let max = null;
 
-	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' }).toLocaleLowerCase();
 
 	useEffect(() => {
 		const getData = async () => await fetch("data.json").then(res => res.json()).then(info => setData(info));
@@ -58,7 +84,6 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		console.log("asd");
 		if (data !== "") {
 			let maxNumber = data.reduce((acc, cur) => acc > cur.amount ? acc : cur.amount, 0);
 			for (let i of data) i.amount === maxNumber && (max = i);
@@ -74,69 +99,43 @@ function App() {
 	}, [data, max]);
 
 	function handleEdit(e) {
-		// console.log(e.target.name, max.day);
-		// console.log(Number(e.target.value));
+		setData(data.map(i => i.day === e.target.name ? { ...i, amount: Number(e.target.value) } : i));
 		Number(e.target.value) > max.amount && (max = { day: e.target.name, amount: Number(e.target.value) });
-		if (max.day === e.target.name) {
-			console.log("same day");
-		}
-		document.querySelector(`[data-day="${e.target.name}"]`).style.height = `${(Number(e.target.value) * 100) / max.amount}%`;
 	}
 
 	return (
-		<Card>
-			<Balance>
-				<h3><span>My balance</span><br /><span>$921.48</span></h3>
-			</Balance>
+		<>
+			<Card>
+				{data === "" ? <p>Loading...</p> : <>
+					<Balance>
+						<h3><span>My balance</span><br /><span>$921.48</span></h3>
+					</Balance>
 
-			<Spending>
-				<h1>Spending - Last 7 days</h1>
+					<Spending>
+						<h1>Spending - Last 7 days</h1>
 
-				<Graphic>
-					<li data-day="mon"></li>
-					<li data-day="tue"></li>
-					<li data-day="wed"></li>
-					<li data-day="thu"></li>
-					<li data-day="fri"></li>
-					<li data-day="sat"></li>
-					<li data-day="sun"></li>
-				</Graphic>
+						<Graphic>
+							{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={"bar" + id} key={crypto.randomUUID()}></li>)}
+						</Graphic>
 
-				<hr />
-				<h2><span>Total this month</span><br /><span>$478.33</span></h2>
-				<p><span>+2.4%</span><br /><span>from last month</span></p>
-			</Spending>
-			<form>
-				<label>
-					Monday
-					<input type="number" name='mon' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Tuesday
-					<input type="number" name='tue' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Wednesday
-					<input type="number" name='wed' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Thursday
-					<input type="number" name='thu' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Friday
-					<input type="number" name='fri' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Saturday
-					<input type="number" name='sat' onChange={e => handleEdit(e)} />
-				</label>
-				<label>
-					Sunday
-					<input type="number" name='sun' onChange={e => handleEdit(e)} />
-				</label>
-			</form>
-		</Card>
+						<hr />
+						<h2><span>Total this month</span><br /><span>$478.33</span></h2>
+						<p><span>+2.4%</span><br /><span>from last month</span></p>
+					</Spending></>}
+			</Card>
+			{
+				data !== "" && <>
+					<EditForm>
+						{
+							data.map(item =>
+								<EditFormItem key={crypto.randomUUID()}>
+									<span>{item.day}</span>
+									<input type="number" name={item.day} onChange={e => handleEdit(e)} placeholder={item.amount} />
+								</EditFormItem>)
+						}
+					</EditForm></>
+			}
+		</>
 	);
 }
 
