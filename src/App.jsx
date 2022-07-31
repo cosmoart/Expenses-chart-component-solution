@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components';
+import dataJSON from "../data.json";
 
 const Card = styled.div`
 	position: absolute;
@@ -32,6 +33,7 @@ const Graphic = styled.ul`
 	align-items: flex-end;
 	height: 8rem;
 	li{
+		position: relative;
 		transition: height .3s ease-in-out, color .3s ease-in-out;
 		border-radius: 5px;
 		width: 30px;
@@ -42,6 +44,8 @@ const Graphic = styled.ul`
 		}
 		&::after{
 			content: attr(data-day);
+			position: absolute;
+			bottom: -1rem;
 		}
 		&::before{
 			content: attr(data-amount);
@@ -72,30 +76,25 @@ const EditFormItem = styled.label`
 	}
 	`
 
+
+
 function App() {
 	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' }).toLocaleLowerCase();
-	const [data, setData] = useState("");
+	const [data, setData] = useState(dataJSON);
+
 	let max = null;
 
-
 	useEffect(() => {
-		const getData = async () => await fetch("data.json").then(res => res.json()).then(info => setData(info));
-		getData();
-	}, []);
+		let maxNumber = data.reduce((acc, cur) => acc > cur.amount ? acc : cur.amount, 0);
+		for (let i of data) i.amount === maxNumber && (max = i);
 
-	useEffect(() => {
-		if (data !== "") {
-			let maxNumber = data.reduce((acc, cur) => acc > cur.amount ? acc : cur.amount, 0);
-			for (let i of data) i.amount === maxNumber && (max = i);
+		document.querySelectorAll("ul li").forEach(i => {
+			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)")
+			i.getAttribute("data-day") === max.day && (i.style.height = "100%");
+			let dayData = data.find(el => el.day === i.getAttribute("data-day"));
+			i.style.height = `${(dayData.amount * 100) / max.amount}%`;
+		});
 
-			document.querySelectorAll("ul li").forEach(i => {
-				i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)")
-				i.getAttribute("data-day") === max.day && (i.style.height = "100%");
-				let dayData = data.find(el => el.day === i.getAttribute("data-day"));
-				i.style.height = `${(dayData.amount * 100) / max.amount}%`;
-			});
-			console.log(max);
-		}
 	}, [data, max]);
 
 	function handleEdit(e) {
@@ -106,35 +105,31 @@ function App() {
 	return (
 		<>
 			<Card>
-				{data === "" ? <p>Loading...</p> : <>
-					<Balance>
-						<h3><span>My balance</span><br /><span>$921.48</span></h3>
-					</Balance>
+				<Balance>
+					<h3><span>My balance</span><br /><span>$921.48</span></h3>
+				</Balance>
 
-					<Spending>
-						<h1>Spending - Last 7 days</h1>
+				<Spending>
+					<h1>Spending - Last 7 days</h1>
 
-						<Graphic>
-							{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={"bar" + id} key={crypto.randomUUID()}></li>)}
-						</Graphic>
+					<Graphic>
+						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={item.day + id} key={id + 10}></li>)}
+					</Graphic>
 
-						<hr />
-						<h2><span>Total this month</span><br /><span>$478.33</span></h2>
-						<p><span>+2.4%</span><br /><span>from last month</span></p>
-					</Spending></>}
+					<hr />
+					<h2><span>Total this month</span><br /><span>$478.33</span></h2>
+					<p><span>+2.4%</span><br /><span>from last month</span></p>
+				</Spending>
 			</Card>
-			{
-				data !== "" && <>
-					<EditForm>
-						{
-							data.map(item =>
-								<EditFormItem key={crypto.randomUUID()}>
-									<span>{item.day}</span>
-									<input type="number" name={item.day} onChange={e => handleEdit(e)} placeholder={item.amount} />
-								</EditFormItem>)
-						}
-					</EditForm></>
-			}
+			<EditForm>
+				{
+					dataJSON.map((item, id) =>
+						<EditFormItem key={id + 20}>
+							<span>{item.day}</span>
+							<input type="number" name={item.day} onChange={e => handleEdit(e)} placeholder={item.amount} />
+						</EditFormItem>)
+				}
+			</EditForm>
 		</>
 	);
 }
