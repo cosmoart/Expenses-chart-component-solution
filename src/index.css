@@ -7,8 +7,16 @@
 	--Cream: hsl(27, 66%, 92%);
 	--Verypaleorange: hsl(33, 100%, 98%);
 }
-body{
+
+body {
 	font-size: 16px;
 	font-family: 'DM Sans', sans-serif;
 	background: var(--Cream);
+	color: var(--Darkbrown);
+}
+
+.hidden {
+
+	transform: translateY(20rem);
+	opacity: 0;
 }

@@ -33,6 +33,7 @@ const Graphic = styled.ul`
 	align-items: flex-end;
 	height: 8rem;
 	li{
+		cursor: pointer;
 		position: relative;
 		transition: height .3s ease-in-out, color .3s ease-in-out;
 		border-radius: 5px;
@@ -46,6 +47,8 @@ const Graphic = styled.ul`
 			content: attr(data-day);
 			position: absolute;
 			bottom: -1rem;
+			left: 50%;
+			transform: translateX(-50%)
 		}
 		&::before{
 			content: attr(data-amount);
@@ -62,6 +65,7 @@ const EditForm = styled.form`
     padding: 1rem;
     margin: 2rem;
     border-radius: 10px;
+	transition: transform .2s ease-in-out, opacity .2s ease-in-out;
 	`
 const EditFormItem = styled.label`
 	display: flex;
@@ -75,8 +79,30 @@ const EditFormItem = styled.label`
 		text-align:right;
 	}
 	`
-
-
+const EditButton = styled.button`
+	cursor: pointer;
+	position: absolute;
+	width: 3rem;
+    height: 3rem;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 10;
+    border-radius: 50%;
+    border: none;
+    padding: 8px;
+	background: var(--Darkbrown);
+	transition: filter .1s ease-in-out, transform .1s ease-in-out;
+	img{
+		width: 100%;
+		object-fit: contain;
+	}
+	&:hover{
+		filter: brightness(1.5);
+	}
+	&:active{
+		transform: scale(.9);
+	}
+	`
 
 function App() {
 	const dayOfWeekName = new Date().toLocaleString('en-US', { weekday: 'short' }).toLocaleLowerCase();
@@ -90,16 +116,18 @@ function App() {
 
 		document.querySelectorAll("ul li").forEach(i => {
 			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)")
-			i.getAttribute("data-day") === max.day && (i.style.height = "100%");
-			let dayData = data.find(el => el.day === i.getAttribute("data-day"));
-			i.style.height = `${(dayData.amount * 100) / max.amount}%`;
+			i.id === max.day && (i.style.height = "100%");
+			i.style.height = `${(data[i.id].amount * 100) / max.amount}%`;
 		});
 
-	}, [data, max]);
+	}, [data]);
 
 	function handleEdit(e) {
-		setData(data.map(i => i.day === e.target.name ? { ...i, amount: Number(e.target.value) } : i));
-		Number(e.target.value) > max.amount && (max = { day: e.target.name, amount: Number(e.target.value) });
+		setData(data.map((i, index) => index === Number(e.target.id) ? { ...i, amount: e.target.value } : i));
+		Number(e.target.value) > max.amount && (max = { day: e.target.id, amount: Number(e.target.value) });
+	}
+	function handleEditButton() {
+		document.querySelector(".editForm").classList.toggle("hidden");
 	}
 
 	return (
@@ -110,10 +138,10 @@ function App() {
 				</Balance>
 
 				<Spending>
-					<h1>Spending - Last 7 days</h1>
+					<h1>Spending - Last {data.length} days</h1>
 
 					<Graphic>
-						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={item.day + id} key={id + 10}></li>)}
+						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={id} key={id + 10}></li>)}
 					</Graphic>
 
 					<hr />
@@ -121,12 +149,13 @@ function App() {
 					<p><span>+2.4%</span><br /><span>from last month</span></p>
 				</Spending>
 			</Card>
-			<EditForm>
+			<EditButton><img src="edit.svg" alt="Edit" onClick={handleEditButton} /></EditButton>
+			<EditForm className='editForm hidden'>
 				{
 					dataJSON.map((item, id) =>
 						<EditFormItem key={id + 20}>
 							<span>{item.day}</span>
-							<input type="number" name={item.day} onChange={e => handleEdit(e)} placeholder={item.amount} />
+							<input type="number" name={item.day} id={id} onChange={e => handleEdit(e)} placeholder={item.amount} />
 						</EditFormItem>)
 				}
 			</EditForm>
