@@ -21,6 +21,11 @@ body {
 	opacity: 0;
 }
 
+:focus {
+	outline: 3px dashed var(--Darkbrown);
+	outline-offset: 2px;
+}
+
 @media screen and (max-width: 1400px) {
 	:root {
 		font-size: 13px;
@@ -42,5 +47,11 @@ body {
 @media screen and (max-width: 370px) {
 	:root {
 		font-size: 9px;
+	}
+}
+
+@media screen and (max-width: 300px) {
+	:root {
+		font-size: 8px;
 	}
 }

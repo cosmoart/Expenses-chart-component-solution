@@ -86,7 +86,7 @@ const Graphic = styled.ul`
 		}
 		&:hover::before{
 			top: -1.875rem;
-			transform: translateX(-50%) scale(1);
+			transform: translateX(-50%) scale(1.2);
 			opacity: 1;
 			filter: brightness(.75);
 		}
@@ -203,7 +203,6 @@ function App() {
 
 		document.querySelectorAll("ul li").forEach(i => {
 			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)");
-			console.log(i.id, max.day, i.id === max.day);
 			i.id === max.day && (i.style.height = "100%");
 			i.style.height = `${(data[i.id].amount * 100) / max.amount}%`;
 		});
@@ -240,7 +239,7 @@ function App() {
 					</SpendingFooter>
 				</Spending>
 			</Card>
-			<EditButton><img src="edit.svg" alt="Edit" onClick={handleEditButton} /></EditButton>
+			<EditButton onClick={handleEditButton}><img src="edit.svg" alt="Edit" /></EditButton>
 			<EditForm className='editForm hidden'>
 				{
 					dataJSON.map((item, id) =>
