@@ -199,20 +199,20 @@ function App() {
 	let max = null;
 
 	useEffect(() => {
-		let maxNumber = data.reduce((acc, cur) => acc > cur.amount ? acc : cur.amount, 0);
-		for (let i of data) i.amount === maxNumber && (max = i);
+		max = data.reduce((a, b) => (a.amount > b.amount) ? a : b);
 
 		document.querySelectorAll("ul li").forEach(i => {
-			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)")
+			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)");
+			console.log(i.id, max.day, i.id === max.day);
 			i.id === max.day && (i.style.height = "100%");
 			i.style.height = `${(data[i.id].amount * 100) / max.amount}%`;
 		});
 
-	}, [data]);
+	}, [data, max]);
 
 	function handleEdit(e) {
-		setData(data.map((i, index) => index === Number(e.target.id) ? { ...i, amount: e.target.value } : i));
-		Number(e.target.value) > max.amount && (max = { day: e.target.id, amount: Number(e.target.value) });
+		Number(e.target.value) > Number(max.amount) && (max = { day: e.target.id, amount: Number(e.target.value) });
+		setData(data.map((i, index) => index === Number(e.target.id) ? { ...i, amount: Number(e.target.value) } : i));
 	}
 
 	function handleEditButton() {

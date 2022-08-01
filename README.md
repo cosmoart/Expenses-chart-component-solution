@@ -25,9 +25,7 @@ This is a solution to the [Expenses chart component challenge on Frontend Mentor
 -   [My process](#my-process)
     -   [Built with](#built-with)
     -   [What I learned](#what-i-learned)
-    -   [Useful resources](#useful-resources)
 -   [Author](#author)
--   [Acknowledgments](#acknowledgments)
 
 </details>
 
@@ -37,29 +35,26 @@ This is a solution to the [Expenses chart component challenge on Frontend Mentor
 
 Users should be able to:
 
-- View the bar chart and hover over the individual bars to see the correct amounts for each day
-- See the current day’s bar highlighted in a different colour to the other bars
-- View the optimal layout for the content depending on their device’s screen size
-- See hover states for all interactive elements on the page
-- **Bonus**: Use the JSON data file provided to dynamically size the bars on the chart
+-   View the bar chart and hover over the individual bars to see the correct amounts for each day
+-   See the current day’s bar highlighted in a different colour to the other bars
+-   View the optimal layout for the content depending on their device’s screen size
+-   See hover states for all interactive elements on the page
+-   **Bonus**: Use the JSON data file provided to dynamically size the bars on the chart
 
 ### Screenshots
 
 <table>
         <tr>
+		    <td>
+                <img src="./screenshots/mobile-solution.webp"
+                    alt="Mobile solution" title="Mobile solution" width="100%" />
+            </td>
             <td>
                 <img src="./screenshots/desktop-solution.webp"
                     alt="Desktop solution" width="100%" title="Desktop solution"/>
             </td>
-            <td>
-                <img src="./screenshots/tablet-solution.webp"
-                    alt="Tablet solution" width="100%" title="Tablet solution"/>
-            </td>
-            <td>
-                <img src="./screenshots/mobile-solution.webp"
-                    alt="Mobile solution" title="Mobile solution" width="100%" />
-            </td>
         </tr>
+
 </table>
 
 ### Links
@@ -72,34 +67,17 @@ Users should be able to:
 ### Built with
 
 -   Semantic HTML5 markup
--   CSS custom properties
 -   Flexbox
--   CSS Grid
 -   Mobile-first workflow
 -   [React](https://reactjs.org/) - JS library
--   [Next.js](https://nextjs.org/) - React framework
 -   [Styled Components](https://styled-components.com/) - For styles
+-   [ViteJS](https://vitejs.dev)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### What I learned
 
 This challenge was a great learning opportunity, it was also very useful to reinforce previous knowledge, and face problems that had not been presented to me before.
-
-To see how you can add code snippets, see below:
-
-```js
-const proudOfThisFunc = () => {
-    console.log("🎉");
-};
-```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-### Useful resources
-
--   [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
--   [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -109,12 +87,6 @@ const proudOfThisFunc = () => {
 -   Frontend Mentor - [@CosmoArt](https://www.frontendmentor.io/profile/cosmoart)
 -   Twitter - [@CosmoArt0](https://twitter.com/cosmoart0)
 -   My personal page - [https://cosmoart.github.io](https://cosmoart.github.io)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Acknowledgments
-
-<!-- Crédito a otras personas con quien trabaje o me inspire -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
