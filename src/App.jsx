@@ -229,7 +229,7 @@ function App() {
 					<h1>Spending - Last {data.length} days</h1>
 
 					<Graphic>
-						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={id} key={id + 10}></li>)}
+						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={id} key={id + 10} aria-label={`${item.day}, ${item.amount}`}></li>)}
 					</Graphic>
 
 					<hr style={{ "opacity": "0.4", "margin": "3rem 0 2rem" }} />
