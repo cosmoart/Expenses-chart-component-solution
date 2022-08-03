@@ -203,8 +203,8 @@ function App() {
 
 		document.querySelectorAll("ul li").forEach(i => {
 			i.getAttribute("data-day") === dayOfWeekName && (i.style.background = "var(--Cyan)");
-			i.id === max.day && (i.style.height = "100%");
-			i.style.height = `${(data[i.id].amount * 100) / max.amount}%`;
+			(i.id - 100) === max.day && (i.style.height = "100%");
+			i.style.height = `${(data[i.id - 100].amount * 100) / max.amount}%`;
 		});
 
 	}, [data, max]);
@@ -229,7 +229,7 @@ function App() {
 					<h1>Spending - Last {data.length} days</h1>
 
 					<Graphic>
-						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={id} key={id + 10} aria-label={`${item.day}, ${item.amount}`}></li>)}
+						{data.map((item, id) => <li data-day={item.day} data-amount={item.amount} id={id + 100} key={id + 10} aria-label={`${item.day}, ${item.amount}`}></li>)}
 					</Graphic>
 
 					<hr style={{ "opacity": "0.4", "margin": "3rem 0 2rem" }} />
